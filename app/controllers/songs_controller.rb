@@ -22,9 +22,9 @@ class SongsController < ApplicationController
       end
 
       current_song = songs[0..0].map{|song| eval(song)}
-      next_songs = songs[1..-1].map{|song| eval(song)}
+      next_songs = (songs[1..-1] || []).map{|song| eval(song)}
 
-      render :json => {current: current_song, next: next_songs}
+      render :json => {current: current_song.first, next: next_songs}
 
     when "html"
       respond_to do |format|
