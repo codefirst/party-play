@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  get 'songs/add'
+  post 'songs/add'
 
   get 'songs/index'
 
