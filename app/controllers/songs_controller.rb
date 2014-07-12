@@ -1,5 +1,7 @@
 class SongsController < ApplicationController
   protect_from_forgery except: :add
+  respond_to :json
+
   def add
     info = write_file params
     save_info info
@@ -11,6 +13,17 @@ class SongsController < ApplicationController
   end
 
   def index
+    begin
+      songs = Redis.current.keys("song:*").map {|song_id| Redis.current.get(song_id)}
+    rescue Redis::CannotConnectError => e
+      render :json => {status: 'ok'}
+      return
+    end
+
+    current_song = songs[0..0].map{|song| eval(song)}
+    next_songs = songs[1..-1].map{|song| eval(song)}
+
+    render :json => {current: current_song, next: next_songs}
   end
 
   private
