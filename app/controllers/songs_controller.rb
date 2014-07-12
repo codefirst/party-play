@@ -1,7 +1,7 @@
 class SongsController < ApplicationController
   protect_from_forgery except: :add
   def add
-    info = write_file request.body
+    info = write_file params
     save_info info
   end
 
@@ -13,10 +13,10 @@ class SongsController < ApplicationController
     File.expand_path("public/music", Rails.root).tap(&FileUtils.method(:mkdir_p))
   end
 
-  def write_file(io)
+  def write_file(params)
     filename = Time.now.strftime("%Y%m%d%H%M%S%L.m4a")
     path = File.expand_path(filename, dir)
-    IO.binwrite(path, io.read)
+    IO.binwrite(path, params[:file].read)
 
     url =  "http://#{request.host}:#{request.port}/music/#{filename}"
 
