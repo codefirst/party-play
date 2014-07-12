@@ -18,22 +18,35 @@
 </div>
 
 <script type="text/javascript">
+var currentModel = {title: "", artist: ""};
+var nextModels = [];
+new Vue({
+  el: '#current',
+  data: currentModel
+});
+new Vue({
+  el: '#next',
+  data: { items: nextModels }
+});
+
+var display = function(data) {
+  currentModel["title"] = data["current"]["title"];
+  currentModel["artist"] = data["current"]["artist"];
+
+  nextModels.length = 0;
+  var nexts = data["next"];
+  for (var i = 0; i < nexts.length; i++) {
+    nextModels.push(nexts[i]);
+  }
+};
 
 $.getJSON("<%= songs_index_path(format: :json) %>", function(data){
-  json = data;
-  var current = new Vue({
-    el: '#current',
-    data: json["current"]
-  });
-  var next = new Vue({
-    el: '#next',
-    data: { items: json["next"] }
-  });
+  display(data);
 });
 
 setInterval(function() {
   $.getJSON("<%= songs_index_path(format: :json) %>", function(data){
-    json = data;
+    display(data);
   });
 }, 5000);
 
