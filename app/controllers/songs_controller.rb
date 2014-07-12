@@ -27,7 +27,9 @@ class SongsController < ApplicationController
       render :json => {current: current_song, next: next_songs}
 
     when "html"
-      render :text => ""
+      respond_to do |format|
+        format.html
+      end
     else
       render :text => ""
     end

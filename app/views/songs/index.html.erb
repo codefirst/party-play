@@ -1,2 +1,41 @@
-<h1>Songs#index</h1>
-<p>Find me in app/views/songs/index.html.erb</p>
+<div id="song">
+  <div style="margin: 60px">
+    <p>Now playing:</p>
+    <div id="current" style="font-size: 300%;text-shadow:3px 3px 3px #5f5f5f">
+      {{title}} / {{artist}}
+    </div>
+  </div>
+  <div style="margin: 60px">
+    <p>Next:</p>
+    <div style="font-size: 150%">
+      <ol id="next">
+        <li v-repeat="items">
+          {{title}} / {{artist}}
+        </li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+$.getJSON("<%= songs_index_path(format: :json) %>", function(data){
+  json = data;
+  var current = new Vue({
+    el: '#current',
+    data: json["current"]
+  });
+  var next = new Vue({
+    el: '#next',
+    data: { items: json["next"] }
+  });
+});
+
+setInterval(function() {
+  $.getJSON("<%= songs_index_path(format: :json) %>", function(data){
+    json = data;
+  });
+}, 5000);
+
+</script>
+
