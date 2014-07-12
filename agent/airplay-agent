@@ -3,7 +3,7 @@ require "airplay"
 require "redis"
 require_relative "../config/initializers/redis"
 
-class AirPlayer
+class AirPlayAgent
   def initialize(device_name)
     @player = Airplay[device_name].player
   end
@@ -14,7 +14,6 @@ class AirPlayer
       sleep 1 and next unless key_for_next_song
 
       song_data = eval(Redis.current.get(key_for_next_song))
-      p song_data
 
       @player.playlist << song_data[:url]
       @player.play
@@ -34,5 +33,5 @@ class AirPlayer
   end
 end
 
-apple_tv = AirPlayer.new("Apple TV")
+apple_tv = AirPlayAgent.new("Apple TV")
 apple_tv.start_playing
