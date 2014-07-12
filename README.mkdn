@@ -48,7 +48,6 @@ $ bundle exec agent/airplay-agent
  * @mzp
 
 ## Lincese
-License
 
 The MIT License (MIT) Copyright (c) 2014 codefirst.org
 
