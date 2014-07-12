@@ -6,6 +6,15 @@ require_relative "../config/initializers/redis"
 class AirPlayAgent
   def initialize(device_name)
     @player = Airplay[device_name].player
+    @skip_requested = false
+
+    Thread.new do
+      client = Redis.current.client
+      subscriber = Redis.new(:host => client.host, :port => client.port)
+      subscriber.subscribe(:skip) do |on|
+        on.message { @skip_requested = true }
+      end
+    end
   end
 
   def start_playing
@@ -40,10 +49,15 @@ class AirPlayAgent
   end
 
   def wait_for_playback?
+    if @skip_requested
+      @skip_requested = false
+      @player.pause
+    end
+
     return true if @player.playlist.next?
     @player.loading? || @player.playing?
   end
 end
 
-apple_tv = AirPlayAgent.new("Apple TV")
-apple_tv.start_playing
+agent = AirPlayAgent.new("Apple TV")
+agent.start_playing
