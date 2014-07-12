@@ -25,7 +25,7 @@ class SongsController < ApplicationController
 
     url =  "http://#{request.host}:#{request.port}/music/#{filename}"
 
-    { path: path, url: url }
+    { path: path, url: url, title: params[:title] }
   end
 
   def save_info(info)
