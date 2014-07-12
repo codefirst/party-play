@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+require "airplay"
+
+apple_tv = Airplay["Apple TV"] # Device
+trailer = "http://192.168.1.122:5000/athos_dance.MOV"
+
+player = apple_tv.player
+player.progress -> progress {
+    puts "I'm viewing #{progress.position} of #{progress.duration}"
+}
+
+def wait(player)
+  sleep 1 while wait_for_playback?(player)
+  player.cleanup
+end
+
+def wait_for_playback?(player)
+  return true if player.playlist.next?
+  player.loading? || player.playing?
+end
+
+
+while true
+    p apple_tv.playlist
+    apple_tv.playlist << trailer
+    player.play
+    wait player
+end
