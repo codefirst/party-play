@@ -26,7 +26,7 @@ class AirPlayAgent
         song_data = eval(Redis.current.get(key_for_next_song))
       rescue Redis::CannotConnectError => e
         puts "Redis connection error"
-        wait 10 and next
+        sleep 10 and next
       end
 
       @player.playlist << song_data[:url]
