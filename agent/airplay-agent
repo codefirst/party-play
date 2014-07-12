@@ -10,14 +10,26 @@ class AirPlayAgent
 
   def start_playing
     while true
-      key_for_next_song = Redis.current.lpop("playlist")
-      sleep 1 and next unless key_for_next_song
+      begin
+        key_for_next_song = Redis.current.lpop("playlist")
+        sleep 1 and next unless key_for_next_song
 
-      song_data = eval(Redis.current.get(key_for_next_song))
+        song_data = eval(Redis.current.get(key_for_next_song))
+      rescue Redis::CannotConnectError => e
+        puts "Redis connection error"
+        wait 10 and next
+      end
 
       @player.playlist << song_data[:url]
       @player.play
       wait
+
+      Redis.current.del(key_for_next_song) rescue Redis::CannotConnectError
+      begin
+        File::delete(song_data[:path])
+      rescue => e
+        p e
+      end
     end
   end
 
