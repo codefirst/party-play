@@ -34,6 +34,7 @@ new Vue({
 var display = function(data) {
   currentModel["title"] = data["current"]["title"];
   currentModel["artist"] = data["current"]["artist"];
+  currentModel["artwork"] = data["current"]["artwork"];
 
   nextModels.length = 0;
   var nexts = data["next"];
