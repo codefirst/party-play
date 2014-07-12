@@ -5,6 +5,11 @@ class SongsController < ApplicationController
     save_info info
   end
 
+  def skip
+    Redis.current.publish 'skip', :skip
+    render text: 'ok'
+  end
+
   def index
   end
 
