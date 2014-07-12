@@ -45,7 +45,7 @@ class SongsController < ApplicationController
 
     url =  "http://#{request.host}:#{request.port}/music/#{filename}"
 
-    { path: path, url: url, title: params[:title] }
+    ({path: path, url: url}).merge(params.slice(:title, :artist))
   end
 
   def save_info(info)
