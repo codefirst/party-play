@@ -1,5 +1,5 @@
 class SongsController < ApplicationController
-  protect_from_forgery except: :add
+  protect_from_forgery except: [:add, :skip]
 
   def add
     info = write_file params
