@@ -47,7 +47,9 @@ class SongsController < ApplicationController
 
     url =  "http://#{request.host}:#{request.port}/music/#{filename}"
 
-    ({path: path, url: url}).merge(params.slice(:title, :artist))
+    info = ({path: path, url: url})
+    params.slice(:title, :artist).each{|k,v| info[k] = CGI.unescape(v)}
+    info
   end
 
   def save_info(info)
