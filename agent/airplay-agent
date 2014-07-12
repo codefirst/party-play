@@ -6,14 +6,13 @@ require_relative "../config/initializers/redis"
 class AirPlayer
   def initialize(device_name)
     @player = Airplay[device_name].player
-    @player.progress -> progress {
-      puts "I'm viewing #{progress.position} of #{progress.duration}"
-    }
   end
 
   def start_playing
     while true
       key_for_next_song = Redis.current.lpop("playlist")
+      sleep 1 and next unless key_for_next_song
+
       song_data = eval(Redis.current.get(key_for_next_song))
       p song_data
 
