@@ -45,10 +45,13 @@ class SongsController < ApplicationController
     path = File.expand_path(filename, dir)
     IO.binwrite(path, params[:file].read)
 
+    IO.binwrite(File.expand_path("#{filename}.artwork.jpg", dir), params[:artwork].read)
+
     url =  "http://#{request.host}:#{request.port}/music/#{filename}"
 
     info = ({path: path, url: url})
     params.slice(:title, :artist).each{|k,v| info[k] = CGI.unescape(v)}
+    info['artwork'] = "#{url}.artwork.jpg"
     info
   end
 

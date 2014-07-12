@@ -36,6 +36,7 @@ class AirPlayAgent
       Redis.current.del(key_for_next_song) rescue Redis::CannotConnectError
       begin
         File::delete(song_data[:path])
+        File::delete("#{song_data[:path]}.artwork.jpg")
       rescue => e
         p e
       end

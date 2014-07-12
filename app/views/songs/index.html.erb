@@ -2,6 +2,7 @@
   <div style="margin: 60px">
     <p>Now playing:</p>
     <div id="current" style="font-size: 300%;text-shadow:3px 3px 3px #5f5f5f">
+      <img class="artwork" src="{{artwork}}" style="width: 1em; height: 1em;">
       {{title}} / {{artist}}
     </div>
   </div>
@@ -10,6 +11,7 @@
     <div style="font-size: 150%">
       <ol id="next">
         <li v-repeat="items">
+          <img class="artwork" src="{{artwork}}" style="width: 1em; height: 1em;">
           {{title}} / {{artist}}
         </li>
       </ol>
