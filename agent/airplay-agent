@@ -1,28 +1,40 @@
 #!/usr/bin/env ruby
 require "airplay"
+require "redis"
 
-apple_tv = Airplay["Apple TV"] # Device
-trailer = "http://192.168.1.122:5000/athos_dance.MOV"
+Redis.current = Redis.new(:host => '192.168.1.124', :port => 6379)
 
-player = apple_tv.player
-player.progress -> progress {
-    puts "I'm viewing #{progress.position} of #{progress.duration}"
-}
+class AirPlayer
+  def initialize(device_name)
+    @player = Airplay[device_name].player
+    @player.progress -> progress {
+      puts "I'm viewing #{progress.position} of #{progress.duration}"
+    }
+  end
 
-def wait(player)
-  sleep 1 while wait_for_playback?(player)
-  player.cleanup
+  def start_playing
+    while true
+      key_for_next_song = Redis.current.lpop("playlist")
+      song_data = eval(Redis.current.get(key_for_next_song))
+      p song_data
+
+      @player.playlist << song_data[:url]
+      @player.play
+      wait
+    end
+  end
+
+  private
+  def wait
+    sleep 1 while wait_for_playback?
+    @player.cleanup
+  end
+
+  def wait_for_playback?
+    return true if @player.playlist.next?
+    @player.loading? || @player.playing?
+  end
 end
 
-def wait_for_playback?(player)
-  return true if player.playlist.next?
-  player.loading? || player.playing?
-end
-
-
-while true
-    p apple_tv.playlist
-    apple_tv.playlist << trailer
-    player.play
-    wait player
-end
+apple_tv = AirPlayer.new("Apple TV")
+apple_tv.start_playing
