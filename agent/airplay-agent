@@ -1,8 +1,7 @@
 #!/usr/bin/env ruby
 require "airplay"
 require "redis"
-
-Redis.current = Redis.new(:host => '192.168.1.124', :port => 6379)
+require_relative "../config/initializers/redis"
 
 class AirPlayer
   def initialize(device_name)
