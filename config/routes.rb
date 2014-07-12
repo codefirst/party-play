@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   post 'songs/add'
   post 'songs/skip'
 
-  get 'songs/index'
+  get 'songs/index(.:format)'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
