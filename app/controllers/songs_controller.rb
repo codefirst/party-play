@@ -1,8 +1,8 @@
 class SongsController < ApplicationController
   protect_from_forgery except: :add
   def add
-    path = write_file request.body
-    save_info path
+    info = write_file request.body
+    save_info info
   end
 
   def index
@@ -17,14 +17,17 @@ class SongsController < ApplicationController
     filename = Time.now.strftime("%Y%m%d%H%M%S%L.m4a")
     path = File.expand_path(filename, dir)
     IO.binwrite(path, io.read)
-    path
+
+    url =  "http://#{request.host}:#{request.port}/music/#{filename}"
+
+    { path: path, url: url }
   end
 
-  def save_info(path)
+  def save_info(info)
     count = Redis.current.incr "song-id"
     id = "song:#{count}"
-    Rails.logger.debug "Add '#{id}' with { path: #{path.inspect} }"
-    Redis.current.set id, { path: path }
+    Rails.logger.debug "Add '#{id}' with #{info.inspect}"
+    Redis.current.set id, info
     Redis.current.rpush "playlist", id
   end
 end
