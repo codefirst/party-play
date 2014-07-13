@@ -21,6 +21,14 @@ body {
   opacity: 1.0;
   z-index: 2;
 }
+.current-wrapper {
+  margin: 60px;
+  margin-bottom: 20px;
+}
+.next-wrapper {
+  margin: 60px;
+  margin-top: 20px;
+}
 .overlay {
   z-index: 1;
   background-color: #e3e3e3;
@@ -29,5 +37,41 @@ body {
   -webkit-filter: blur(25px);
   -moz-filter: blur(25px);
   filter: blur(25px);
+}
+#current {
+  font-size: 300%;
+  text-shadow:3px 3px 3px #5f5f5f;
+}
+.current-left {
+  width:35%;
+  float:left;
+  text-align:center;
+}
+.current-left img {
+  height:312px;
+}
+.current-right {
+  width:65%;
+  float:right;
+  text-align:center;
+  height:312px;
+}
+.current-artist {
+  font-size:80%;
+}
+.current-right > span {
+  position: relative;
+  top: 25%;
+  transform: translateY(-25%);
+}
+.next-container {
+  font-size: 150%;
+}
+#next img {
+  width: 1em;
+  height: 1em;
+}
+.clear {
+  clear: both;
 }
 
