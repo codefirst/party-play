@@ -20,13 +20,14 @@ class AirPlayAgent
   def start_playing
     while true
       begin
-        #key_for_next_song = Redis.current.lpop("playlist")
         key_for_next_song = Redis.current.lindex("playlist", 0)
         sleep 1 and next unless key_for_next_song
+        $stderr.puts "Playing: #{key_for_next_song}"
 
         song_data = eval(Redis.current.get(key_for_next_song))
+        $stderr.puts "Song data: #{song_data.inspect}"
       rescue Redis::CannotConnectError => e
-        puts "Redis connection error"
+        $stderr.puts "Redis connection error"
         sleep 10 and next
       end
 
@@ -40,7 +41,7 @@ class AirPlayAgent
         File::delete(song_data[:path])
         File::delete("#{song_data[:path]}.artwork.jpg")
       rescue => e
-        p e
+        $stderr.puts e.inspect
       end
     end
   end
@@ -62,5 +63,7 @@ class AirPlayAgent
   end
 end
 
+$stderr.puts "Start AirPlay agent"
 agent = AirPlayAgent.new("Apple TV")
+$stderr.puts "Found AppleTV: #{agent}"
 agent.start_playing
