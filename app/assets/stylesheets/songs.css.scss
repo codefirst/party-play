@@ -75,3 +75,37 @@ body {
   clear: both;
 }
 
+@media only screen and (max-device-width: 480px) {
+  .current-wrapper {
+    margin: 10px;
+  }
+  .next-wrapper {
+    margin: 10px;
+  }
+  .current-left {
+    width:100%;
+    text-align:center;
+  }
+  .current-left img {
+    width: 300px;
+    height:auto;
+  }
+  .current-right {
+    width:100%;
+    text-align:center;
+    height: auto;
+  }
+  .current-right > span {
+    position: relative;
+    top: 0;
+    transform: translateY(0);
+  }
+  #current {
+    font-size: 150%;
+  }
+  .next-container {
+    font-size: 120%;
+  }
+
+}
+
