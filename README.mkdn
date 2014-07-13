@@ -1,4 +1,4 @@
-AirHack: a modernize jukebox
+AirHack: a modern jukebox
 =============================
 
 ![overview](https://raw.githubusercontent.com/codefirst/air-hack/master/misc/overview.png)
@@ -31,7 +31,7 @@ $ bundle install --path .bundle
 
 Run server and agent:
 ```
-$ bundle foreman start
+$ bundle exec foreman start
 ```
 
 ## Authors
