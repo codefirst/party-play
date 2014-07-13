@@ -21,6 +21,8 @@ class AirPlayAgent
     while true
       begin
         key_for_next_song = Redis.current.lindex("playlist", 0)
+
+        Thread.pass
         sleep 1 and next unless key_for_next_song
         $stderr.puts "Playing: #{key_for_next_song}"
 
@@ -28,6 +30,7 @@ class AirPlayAgent
         $stderr.puts "Song data: #{song_data.inspect}"
       rescue Redis::CannotConnectError => e
         $stderr.puts "Redis connection error"
+        Thread.pass
         sleep 10 and next
       end
 
@@ -48,7 +51,8 @@ class AirPlayAgent
 
   private
   def wait
-    Thread.pass and sleep 1 while wait_for_playback?
+    Thread.pass
+    sleep 1 while wait_for_playback?
     @player.cleanup
   end
 
