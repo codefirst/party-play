@@ -15,7 +15,7 @@ class SongsController < ApplicationController
     case params[:format]
     when "json"
       begin
-        songs = Redis.current.keys("song:*").sort.map {|song_id| Redis.current.get(song_id)}
+        songs = Redis.current.lrange("playlist",0,10).map {|song_id| Redis.current.get(song_id)}
       rescue Redis::CannotConnectError => e
         render :json => {status: 'ok'}
         return
