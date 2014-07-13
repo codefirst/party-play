@@ -45,7 +45,7 @@ class AirPlayAgent
 
   private
   def wait
-    sleep 1 while wait_for_playback?
+    Thread.pass and sleep 1 while wait_for_playback?
     @player.cleanup
   end
 
