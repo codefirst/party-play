@@ -51,8 +51,10 @@ class AirPlayAgent
 
   private
   def wait
-    Thread.pass
-    sleep 1 while wait_for_playback?
+    while wait_for_playback?
+      Thread.pass
+      sleep 1
+    end
     @player.cleanup
   end
 
@@ -60,9 +62,9 @@ class AirPlayAgent
     if @skip_requested
       @skip_requested = false
       @player.pause
+      return false
     end
 
-    return true if @player.playlist.next?
     @player.loading? || @player.playing?
   end
 end
