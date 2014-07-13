@@ -29,7 +29,6 @@ gem 'spring',        group: :development
 gem 'redis'
 gem 'dnssd'
 gem 'airplay'
-gem 'thin'
 gem 'quiet_assets', group: :development
 gem 'foreman'
 
