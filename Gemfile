@@ -31,6 +31,7 @@ gem 'dnssd'
 gem 'airplay'
 gem 'thin'
 gem 'quiet_assets', group: :development
+gem 'foreman'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

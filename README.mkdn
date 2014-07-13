@@ -29,14 +29,9 @@ Install dependent gems:
 $ bundle install --path .bundle
 ```
 
-Run server:
+Run server and agent:
 ```
-$ bundle exec rails s
-```
-
-And run air-play bot at another terminal:
-```
-$ bundle exec agent/airplay-agent
+$ bundle foreman start
 ```
 
 ## Authors
