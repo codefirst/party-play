@@ -1,9 +1,11 @@
 #!/usr/bin/env ruby
 require "airplay"
 require "redis"
+require 'faye/websocket'
 require_relative "../config/initializers/redis"
 
 class AirPlayAgent
+  WEBSOCKET_ENDPOINT = 'ws://localhost:3000/websocket'
   def initialize(device_name)
     @player = Airplay[device_name].player
     @skip_requested = false
@@ -15,6 +17,7 @@ class AirPlayAgent
         on.message { @skip_requested = true }
       end
     end
+    @ws = Faye::WebSocket::Client.new(WEBSOCKET_ENDPOINT)
   end
 
   def start_playing
@@ -43,6 +46,7 @@ class AirPlayAgent
         Redis.current.lpop("playlist")
         File::delete(song_data[:path])
         File::delete("#{song_data[:path]}.artwork.jpg")
+        @ws.send({})
       rescue => e
         $stderr.puts e.inspect
       end

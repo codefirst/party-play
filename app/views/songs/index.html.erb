@@ -62,11 +62,8 @@ $.getJSON("<%= songs_index_path(format: :json) %>", function(data){
   display(data);
 });
 
-setInterval(function() {
-  $.getJSON("<%= songs_index_path(format: :json) %>", function(data){
-    display(data);
-  });
-}, 5000);
-
+var dispatcher = new WebSocketRails("<%= request.host %>:<%= request.port %>/websocket", true)
+dispatcher.bind("song_changed", function(data) {
+  display(data);
+});
 </script>
-

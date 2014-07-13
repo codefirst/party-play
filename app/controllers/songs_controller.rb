@@ -1,4 +1,6 @@
 class SongsController < ApplicationController
+  include SongsConcerns
+
   protect_from_forgery except: [:add, :skip]
 
   def add
@@ -14,18 +16,12 @@ class SongsController < ApplicationController
   def index
     case params[:format]
     when "json"
-      begin
-        songs = Redis.current.lrange("playlist",0,10).map {|song_id| Redis.current.get(song_id)}
-      rescue Redis::CannotConnectError => e
+      songs = get_songs
+      if songs
+        render :json => songs
+      else
         render :json => {status: 'ok'}
-        return
       end
-
-      current_song = songs[0..0].map{|song| eval(song)}
-      next_songs = (songs[1..-1] || []).map{|song| eval(song)}
-
-      render :json => {current: current_song.first, next: next_songs}
-
     when "html"
       respond_to do |format|
         format.html
