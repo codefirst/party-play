@@ -1,4 +1,4 @@
-<div id="song">
+<div id="song" class="absolute-box">
   <div style="margin: 60px">
     <p>Now playing:</p>
     <div id="current" style="font-size: 300%;text-shadow:3px 3px 3px #5f5f5f">
@@ -18,9 +18,10 @@
     </div>
   </div>
 </div>
+<div id="bg-container" class="overlay absolute-box"></div>
 
 <script type="text/javascript">
-var currentModel = {title: "", artist: ""};
+var currentModel = {title: "", artist: "", artwork: ""};
 var nextModels = [];
 new Vue({
   el: '#current',
@@ -32,6 +33,10 @@ new Vue({
 });
 
 var display = function(data) {
+  if (data["current"] == null) {
+    return;
+  }
+
   currentModel["title"] = data["current"]["title"];
   currentModel["artist"] = data["current"]["artist"];
   currentModel["artwork"] = data["current"]["artwork"];
@@ -40,6 +45,12 @@ var display = function(data) {
   var nexts = data["next"];
   for (var i = 0; i < nexts.length; i++) {
     nextModels.push(nexts[i]);
+  }
+
+  var newArtwork = currentModel["artwork"];
+  var oldArtwork = $("#bg-container").css("background-image");
+  if (newArtwork != null && newArtwork != oldArtwork) {
+    $("#bg-container").css("background-image", "url(" + newArtwork + ")");
   }
 };
 
