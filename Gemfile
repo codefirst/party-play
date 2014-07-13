@@ -29,6 +29,8 @@ gem 'spring',        group: :development
 gem 'redis'
 gem 'dnssd'
 gem 'airplay'
+gem 'thin'
+gem 'quiet_assets', group: :development
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
