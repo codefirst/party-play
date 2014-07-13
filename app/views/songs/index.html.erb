@@ -49,7 +49,7 @@ var display = function(data) {
 
   var newArtwork = currentModel["artwork"];
   var oldArtwork = $("#bg-container").css("background-image");
-  if (newArtwork != null && newArtwork != oldArtwork) {
+  if (newArtwork != null && ("url(" + newArtwork + ")") != oldArtwork) {
     $("#bg-container").css("background-image", "url(" + newArtwork + ")");
   }
 };
