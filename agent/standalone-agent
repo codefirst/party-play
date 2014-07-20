@@ -1,11 +1,12 @@
 #!/usr/bin/env ruby
+# coding: utf-8
+
 require "redis"
 require_relative "../config/initializers/redis"
+require_relative "../config/initializers/player"
 
-class MPlayerAgent
+class StandaloneAgent
   def initialize
-    @skip_requested = false
-
     Thread.new do
       client = Redis.current.client
       subscriber = Redis.new(:host => client.host, :port => client.port)
@@ -16,7 +17,7 @@ class MPlayerAgent
   end
 
   def play(path)
-    @pid = spawn("afplay #{path}")
+    @pid = spawn("#{Player} #{path}")
     @player = Process.detach(@pid)
   end
 
@@ -57,6 +58,6 @@ class MPlayerAgent
   end
 end
 
-$stderr.puts "Start mplayer agent"
-agent = MPlayerAgent.new
+$stderr.puts "Start standalone agent"
+agent = StandaloneAgent.new
 agent.start_playing
