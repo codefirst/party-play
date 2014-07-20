@@ -1,0 +1,62 @@
+#!/usr/bin/env ruby
+require "redis"
+require_relative "../config/initializers/redis"
+
+class MPlayerAgent
+  def initialize
+    @skip_requested = false
+
+    Thread.new do
+      client = Redis.current.client
+      subscriber = Redis.new(:host => client.host, :port => client.port)
+      subscriber.subscribe(:skip) do |on|
+        on.message { skip }
+      end
+    end
+  end
+
+  def play(path)
+    @pid = spawn("afplay #{path}")
+    @player = Process.detach(@pid)
+  end
+
+  def skip
+    Process.kill(:TERM, @pid)
+  end
+
+
+  def start_playing
+    while true
+      begin
+        key_for_next_song = Redis.current.lindex("playlist", 0)
+
+        Thread.pass
+        sleep 1 and next unless key_for_next_song
+        $stderr.puts "Playing: #{key_for_next_song}"
+
+        song_data = eval(Redis.current.get(key_for_next_song))
+        $stderr.puts "Song data: #{song_data.inspect}"
+      rescue Redis::CannotConnectError => e
+        $stderr.puts "Redis connection error"
+        Thread.pass
+        sleep 10 and next
+      end
+
+      play(song_data[:path])
+      @player.join
+
+      Redis.current.del(key_for_next_song) rescue Redis::CannotConnectError
+      begin
+        Redis.current.lpop("playlist")
+        File::delete(song_data[:path])
+        File::delete("#{song_data[:path]}.artwork.jpg")
+      rescue => e
+        $stderr.puts e.inspect
+      end
+    end
+  end
+end
+
+$stderr.puts "Start mplayer agent"
+agent = MPlayerAgent.new
+agent.start_playing
