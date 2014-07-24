@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   post 'songs/add'
+  get 'songs/add_url'
   post 'songs/skip'
 
   get 'songs/index(.:format)', as: :songs_index

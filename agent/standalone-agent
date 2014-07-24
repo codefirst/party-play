@@ -50,7 +50,7 @@ class StandaloneAgent
       begin
         Redis.current.lpop("playlist")
         File::delete(song_data[:path])
-        File::delete("#{song_data[:path]}.artwork.jpg")
+        File::delete(song_data[:artwork]) if File::exists?(song_data[:artwork])
       rescue => e
         $stderr.puts e.inspect
       end
