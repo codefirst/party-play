@@ -12,10 +12,8 @@ class SongsController < ApplicationController
   def add_url
     render :json => {:status => 'ng'} and return if params[:url].nil?
 
-    info = download_file(params)
-    save_info info
-
-    render :json => {:status => 'ok'}
+    info = download_file_asynchronously(params)
+    render :json => {status: 'ok', info: info}
   end
 
   def skip
@@ -71,28 +69,33 @@ class SongsController < ApplicationController
     info
   end
 
-  def download_file(params)
+  def download_file_asynchronously(params)
     url = params[:url]
     json = JSON::parse(`youtube-dl --dump-json "#{url}"`)
 
-    time = Time.now.strftime("%Y%m%d%H%M%S%L")
-    video_filename = "#{time}.#{json['ext']}"
+    Process::fork do
+      download_command = "youtube-dl"
+      if account[json["extractor"]]
+        username = account[json["extractor"]]["username"]
+        password = account[json["extractor"]]["password"]
+        download_command = "#{download_command} -u #{username} -p #{password}"
+      end
 
-    if account[json["extractor"]]
-      username = account[json["extractor"]]["username"]
-      password = account[json["extractor"]]["password"]
-      puts `youtube-dl -u #{username} -p #{password} -o "public/music/#{video_filename}" "#{url}"`
-    else
-      puts `youtube-dl -o "public/music/#{video_filename}" "#{url}"`
+      time = Time.now.strftime("%Y%m%d%H%M%S%L")
+      video_filename = "#{time}.#{json['ext']}"
+
+      puts `#{download_command} -o "#{dir}/#{video_filename}" "#{url}"`
+
+      title = json["title"]
+      artist = json["uploader"]
+      path = File.expand_path(video_filename, dir)
+      url =  "http://#{request.host}:#{request.port}/music/#{video_filename}"
+      artwork_url = json["thumbnail"]
+
+      save_info(title: title, artist: artist, path: path, url: url, artwork: artwork_url)
     end
 
-    title = json["title"]
-    artist = json["uploader"]
-    path = File.expand_path(video_filename, dir)
-    url =  "http://#{request.host}:#{request.port}/music/#{video_filename}"
-    artwork_url = json["thumbnail"]
-
-    {title: title, artist: artist, path: path, url: url, artwork: artwork_url}
+    json
   end
 
   def save_info(info)
