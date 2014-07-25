@@ -45,6 +45,20 @@ new Vue({
   data: { items: nextModels }
 });
 
+function areNextModelsChanged(nexts) {
+  if (nexts.length != nextModels.length) {
+    return true;
+  }
+
+  for (var i = 0; i < nexts.length; i++) {
+    if (nexts[i]["artwork"] != nextModels[i]["artwork"]) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 var display = function(data) {
   if (data["current"] == null) {
     return;
@@ -54,10 +68,12 @@ var display = function(data) {
   currentModel["artist"] = data["current"]["artist"];
   currentModel["artwork"] = data["current"]["artwork"];
 
-  nextModels.length = 0;
-  var nexts = data["next"];
-  for (var i = 0; i < nexts.length; i++) {
-    nextModels.push(nexts[i]);
+  if (areNextModelsChanged(data["next"])) {
+    nextModels.length = 0;
+    var nexts = data["next"];
+    for (var i = 0; i < nexts.length; i++) {
+      nextModels.push(nexts[i]);
+    }
   }
 
   var newArtwork = currentModel["artwork"];
