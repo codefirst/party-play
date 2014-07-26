@@ -1,4 +1,7 @@
 #!/usr/bin/env ruby
+
+Process.daemon if ARGV.include?("-d")
+
 require "airplay"
 require "redis"
 require_relative "../config/initializers/redis"

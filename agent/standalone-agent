@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
-# coding: utf-8
+
+Process.daemon if ARGV.include?("-d")
 
 require "redis"
 require_relative "../config/initializers/redis"
