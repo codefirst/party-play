@@ -1,0 +1,3 @@
+web: bundle exec rails s -p $PORT
+agent: LC_ALL=ja_JP.UTF-8 bundle exec ruby agent/standalone-agent
+log: touch log/development.log;tail -f log/development.log
