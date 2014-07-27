@@ -3,16 +3,26 @@ AirHack: a modern jukebox
 
 ![overview](https://raw.githubusercontent.com/codefirst/air-hack/master/misc/overview.png)
 
-## Prerequires
+## Prerequisites
+
+### With Apple TV
 
  * Ruby 2.0 or higher
  * Redis 2.8
  * Apple TV
+ * youtube-dl (optional)
  * Good friends which have cool songs. Of course, good friends should have iPhone.
+
+### Without Apple TV
+
+ * Ruby 2.0 or higher
+ * Redis 2.8
+ * youtube-dl (optional)
+ * Audio player (e.g. mplayer or afplay)
 
 ## Use case
 
-1. Connect PC/every iPhone/Apple TV to same network.
+1. Connect PC/every iPhones/Apple TV to same network.
 2. Run this app on PC.
 3. Push nice songs to PC by iPhone app.
 4. This app plays a song.
