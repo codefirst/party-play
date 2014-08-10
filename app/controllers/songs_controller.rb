@@ -74,7 +74,7 @@ class SongsController < ApplicationController
     json = JSON::parse(`youtube-dl --dump-json "#{url}"`)
 
     Process::fork do
-      download_command = "youtube-dl"
+      download_command = "youtube-dl -x"
       if account[json["extractor"]]
         username = account[json["extractor"]]["username"]
         password = account[json["extractor"]]["password"]
@@ -85,11 +85,16 @@ class SongsController < ApplicationController
       video_filename = "#{time}.#{json['ext']}"
 
       puts `#{download_command} -o "#{dir}/#{video_filename}" "#{url}"`
+      audio_filename = nil
+      ["m4a", "mp3"].each do |ext|
+        filename = "#{time}.#{ext}"
+        audio_filename = filename if File.exists?("#{dir}/#{filename}")
+      end
 
       title = json["title"]
       artist = json["uploader"]
-      path = File.expand_path(video_filename, dir)
-      url =  "http://#{request.host}:#{request.port}/music/#{video_filename}"
+      path = File.expand_path(audio_filename, dir)
+      url =  "http://#{request.host}:#{request.port}/music/#{audio_filename}"
       artwork_url = json["thumbnail"]
 
       save_info(title: title, artist: artist, path: path, url: url, artwork: artwork_url)
