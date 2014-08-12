@@ -3,7 +3,7 @@
     <p>Now playing:</p>
     <div id="current">
       <div class="current-left">
-        <img class="artwork" src="{{artwork}}">
+        <img class="artwork" v-attr="src: artwork">
       </div>
       <div class="current-right">
         <span>
@@ -20,7 +20,7 @@
     <div class="next-container">
       <ol id="next">
         <li v-repeat="items">
-          <img class="artwork" src="{{artwork}}">
+          <img class="artwork" v-attr="src: artwork">
           {{title}} / {{artist}}
         </li>
       </ol>
