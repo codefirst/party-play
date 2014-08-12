@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>{{title}}</title>
+  <title v-text="title"></title>
   <link type="image/x-icon" rel="icon" v-attr="href: artwork"></link>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
