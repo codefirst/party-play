@@ -86,7 +86,7 @@ class SongsController < ApplicationController
 
       puts `#{download_command} -o "#{dir}/#{video_filename}" "#{url}"`
       audio_filename = nil
-      ["m4a", "mp3"].each do |ext|
+      ["m4a", "mp3", "mp4"].each do |ext|
         filename = "#{time}.#{ext}"
         audio_filename = filename if File.exists?("#{dir}/#{filename}")
       end
